@@ -2,13 +2,13 @@ import numpy as np
 import torch
 import pickle
 
-ent2sec = np.load('/mnt/data1/ma/OOG_TKG/Dataset/ICEWS18/auxiliary/ent2sec_matrix_v3.npy')
+ent2sec = np.load('ent2sec_matrix.npy')
 print(ent2sec.shape)
 rel_prob = {}
 rel_count = {}
 relations = set()
 
-with open('/mnt/data1/ma/TITer-master/data/ICEWS18/processed_data_v2/background_graph_for_rl.txt', 'r') as f:
+with open('background_graph_for_rl.txt', 'r') as f:
     for line in f:
         line_split = line.split()
         s, r, o, t = line_split[0], line_split[1], line_split[2], line_split[3]
@@ -41,29 +41,13 @@ rel2secprob = []
 for rel in range(0, 256):
     if rel not in relations:
         print(rel)
-# assert 0
-# rel_prob.update({198:[torch.zeros(1, ent2sec.shape[1]), torch.zeros(1, ent2sec.shape[1])]})
-# rel_count.update({198: 1})
-# rel_prob.update({429:[torch.zeros(1, ent2sec.shape[1]), torch.zeros(1, ent2sec.shape[1])]})
-# rel_count.update({429: 1})
+
 for rel in sorted(rel_prob.keys()):
-    # print((rel_prob[rel]))
-    # print(rel)
-    # assert 0
-    # dist = torch.cat(rel_prob[rel], dim=0)
     dist = torch.tensor(rel_prob[rel][1])
-    # rel_prob[rel] = softmax(dist)
-    # rel_prob[rel] = dist/torch.tensor(rel_count[rel])
     rel2secprob.append(dist/torch.tensor(rel_count[rel]))
 
 rel2secprob = torch.cat(rel2secprob)
 
-# print(rel_prob[160])
-# print(torch.sum(rel_prob[160], dim=1))
-# print(rel_prob[160].shape)
-print(rel2secprob.shape)
-print(len(relations))
-
-with open('/mnt/data1/ma/TITer-master/data/ICEWS18/processed_data_v2/rel2secprob.pickle', 'wb') as handle:
+with open('rel2secprob.pickle', 'wb') as handle:
     pickle.dump(rel2secprob, handle)
             
