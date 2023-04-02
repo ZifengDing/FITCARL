@@ -28,6 +28,8 @@ if __name__ == '__main__':
     config = {
         'num_rel': dataset_train.num_r,
         'num_ent': dataset_train.num_e,
+        'adaptive_sample': False,
+        'random_sample': False,
     }
     # create graph by combining meta sets with background
     env_train = Env(dataset_train.allQuadruples, config)

@@ -10,7 +10,6 @@ from model.agent import Agent
 from model.environment import Env
 from model.episode import Episode
 from model.policyGradient import PG
-from model.dirichlet import Dirichlet
 import os
 import pickle
 import random
@@ -45,7 +44,6 @@ def parse_args(args=None):
     parser.add_argument('--save_epoch', default=100, type=int, help='model saving frequency')
     parser.add_argument('--clip_gradient', default=5.0, type=float, help='for gradient crop')
     parser.add_argument('--pretrain', action='store_true', help='whether to use pretrain')
-    # parser.add_argument('--loss_belief', action='store_true', help='whether to use belief loss guidance.')
 
     # Test Params
     parser.add_argument('--beam_size', default=100, type=int, help='the beam number of the beam search')
@@ -106,14 +104,13 @@ def get_model_config(args, num_ent, num_rel):
         'few': args.few, # shot size
         'sector': args.sector, # whether to use sector (concept) regularization
         'conf': args.conf, # whether to calculate confidence
-        'conf_mode': args.belief_mode, # confidence mode
+        'conf_mode': args.conf_mode, # confidence mode
         'history_encoder': args.history_encoder, # how to learn path embeddings
         'score_module': args.score_module, # which action scoring module
         'sector_emb': args.sector_emb, # whether to use sector (concept) embeddings
         'adaptive_sample': args.adaptive_sample, # whether to use time-adaptive sample
         'random_sample': args.random_sample,  # whether to use random sample
         'entity_learner': args.entity_learner, # how to map entity from single support
-        # 'loss_belief': args.loss_belief,
     }
     return config
 
@@ -198,15 +195,15 @@ def main(args):
     episode = Episode(env, agent, config)
     # load pretrained embedding of background entities
     if args.pretrain:
-        if args.data_path == 'data/ICEWS14/processed_data_v1':
-            episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS14/v1/ComplEx_entity_100.npy',
-                                  '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS14/v1/ComplEx_relation_100.npy')
-        elif args.data_path == 'data/ICEWS18/processed_data_v2':
-            episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_entity_100.npy',
-                                  '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_relation_100.npy')
-        else:
-            episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_entity_100.npy',
-                                  '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_relation_100.npy')
+        # if args.data_path == 'data/ICEWS14/processed_data_v1':
+        episode.load_pretrain(args.data_path + '/pretrain/ComplEx_entity_100.npy',
+                              args.data_path + '/pretrain/ComplEx_relation_100.npy')
+        # elif args.data_path == 'data/ICEWS18/processed_data_v2':
+        #     episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_entity_100.npy',
+        #                           '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_relation_100.npy')
+        # else:
+        #     episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_entity_100.npy',
+        #                           '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_relation_100.npy')
     if args.cuda:
         episode = episode.cuda()
 
@@ -243,12 +240,7 @@ def main(args):
                 episode.back_ent = back_ent
 
     ######################Training and Testing###########################
-    if args.reward_shaping:
-        alphas = pickle.load(open(os.path.join(args.data_path, args.alphas_pkl), 'rb'))
-        distributions = Dirichlet(alphas, args.k)
-    else:
-        distributions = None
-    trainer = Trainer(episode, pg, optimizer, args, distributions)
+    trainer = Trainer(episode, pg, optimizer, args)
     tester = Tester(episode, args, baseData_train.train_entities)
 
     best_mrr = 0

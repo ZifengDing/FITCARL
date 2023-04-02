@@ -6,10 +6,7 @@ import time
 def set_logger(args):
     """Write logs to checkpoint and console"""
     log_name = 'train_' + time.strftime('%Y_%m_%d') + '_' + time.strftime('%H:%M:%S') + '.log'
-    if args.do_train:
-        log_file = os.path.join(args.save_path, log_name)
-    else:
-        log_file = os.path.join(args.save_path, 'test.log')
+    log_file = os.path.join(args.save_path, log_name)
 
     logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(message)s',

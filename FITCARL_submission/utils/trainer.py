@@ -6,12 +6,11 @@ import random
 import numpy as np
 
 class Trainer(object):
-    def __init__(self, model, pg, optimizer, args, distribution=None):
+    def __init__(self, model, pg, optimizer, args):
         self.model = model
         self.pg = pg
         self.optimizer = optimizer
         self.args = args
-        self.distribution = distribution
         self.curr_ent_idx = 0
 
     def train_epoch(self, train_ent2quad, ntriple, old_support=None):
@@ -64,12 +63,12 @@ class Trainer(object):
         src_que_embeds = self.model.agent.ent_embs.forward_withraw(unseen_ent_emb, torch.zeros_like(time_que))
         dst_que_embs_static = self.model.agent.ent_embs.ent_embs(dst_que)
 
-        all_loss, all_logits, _, current_entities, current_time, all_loss_reg, reward, loss_belief = self.model(src_que, src_que_embeds, time_que,
-                                                                                                       rel_que, dst_que_embs_static, issupport=False)
+        all_loss, all_logits, _, current_entities, current_time, all_loss_reg, reward = self.model(src_que, src_que_embeds, time_que,
+                                                                                                   rel_que, dst_que_embs_static, issupport=False)
 
         cum_discounted_reward = self.pg.calc_cum_discounted_reward_(reward)
         num_query = src_que.shape[0]
-        reinfore_loss = self.pg.calc_reinforce_loss(all_loss, all_logits, cum_discounted_reward, all_loss_reg, num_query, loss_belief)
+        reinfore_loss = self.pg.calc_reinforce_loss(all_loss, all_logits, cum_discounted_reward, all_loss_reg, num_query)
         self.pg.now_epoch += 1
 
         self.optimizer.zero_grad()

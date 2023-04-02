@@ -224,7 +224,7 @@ class Agent(nn.Module):
         scores = scores.masked_fill(pad_mask, -1e10)  # [batch_size ,action_number]
 
         action_prob = torch.softmax(scores, dim=1)
-        action_prob_without_belief = action_prob
+        action_prob_without_conf = action_prob
         ##### Confidence ##############
         if self.config['conf']:
             conf_prob = self.confidence(query_entity, query_relation, neighbors_entities, pad_mask, mode=self.config['conf_mode'])
@@ -256,7 +256,7 @@ class Agent(nn.Module):
             loss_sec_regularize = torch.zeros_like(loss)
 
         if not testing:
-            if self.config['belief']:
+            if self.config['conf']:
                 reward = self.get_reward_step(torch.gather(action_space[:, :, 1], dim=1, index=action_id).reshape(action_space.shape[0]), answer_embeds,
                                               torch.gather(conf_prob, dim=1, index=action_id).reshape(conf_prob.shape[0])).unsqueeze(1)
             else:
