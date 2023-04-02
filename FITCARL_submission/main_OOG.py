@@ -195,15 +195,8 @@ def main(args):
     episode = Episode(env, agent, config)
     # load pretrained embedding of background entities
     if args.pretrain:
-        # if args.data_path == 'data/ICEWS14/processed_data_v1':
         episode.load_pretrain(args.data_path + '/pretrain/ComplEx_entity_100.npy',
                               args.data_path + '/pretrain/ComplEx_relation_100.npy')
-        # elif args.data_path == 'data/ICEWS18/processed_data_v2':
-        #     episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_entity_100.npy',
-        #                           '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS18/v1/ComplEx_relation_100.npy')
-        # else:
-        #     episode.load_pretrain('/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_entity_100.npy',
-        #                           '/mnt/data1/ma/OOG_TKG/Pretraining/ICEWS05-15/v15/ComplEx_relation_100.npy')
     if args.cuda:
         episode = episode.cuda()
 
