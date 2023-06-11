@@ -1,6 +1,6 @@
 # FITCARL
 
-This is the code for the paper **Improving Few-Shot Inductive Learning on Temporal Knowledge Graphs using Confidence-Augmented Reinforcement Learning** ([paper](https://arxiv.org/abs/2304.00613) (appendices also included) accepted to ECML/PKDD 2023. 
+This is the code for the paper **Improving Few-Shot Inductive Learning on Temporal Knowledge Graphs using Confidence-Augmented Reinforcement Learning** ([paper](https://arxiv.org/abs/2304.00613) (appendices also included)) accepted to ECML/PKDD 2023. 
 
 Datasets are already preprocessed.
 
