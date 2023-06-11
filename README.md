@@ -19,3 +19,5 @@ python3 main_OOG.py --data_path data/ICEWS14/processed_data --pretrain --emb_nog
 ICEWS18-OOG and ICEWS0515-OOG are only trainable with more than 15GB GPU memory. 
 
 You can also try as you wish. Just change the corresponding arguments from the above examples.
+
+Code is developed based on [TITer](https://github.com/JHL-HUST/TITer/)
