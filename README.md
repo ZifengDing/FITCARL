@@ -1,6 +1,7 @@
 # FITCARL
 
-Code for FITCARL. 
+This is the code for the paper **Improving Few-Shot Inductive Learning on Temporal Knowledge Graphs using Confidence-Augmented Reinforcement Learning** ([paper](https://arxiv.org/abs/2304.00613)) accepted to ECML/PKDD 2023. 
+
 Datasets are already preprocessed.
 
 To run 3-shot meta-training on ICEWS14-OOG:
