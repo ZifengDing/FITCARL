@@ -3,6 +3,7 @@
 This is the code for the paper **Improving Few-Shot Inductive Learning on Temporal Knowledge Graphs using Confidence-Augmented Reinforcement Learning** ([paper](https://arxiv.org/abs/2304.00613) (appendices also included)) accepted to ECML/PKDD 2023. 
 
 Datasets are already preprocessed.
+Due to file size limit, we put the ent2sec_matrix.npy of ICEWS18 and ICEWS0515 in this [link](https://www.dropbox.com/scl/fo/54e6u7ni2n1magx9r5xz2/AFiiYkSl4rWWEiETxYUyUXY?rlkey=urb5pxwv9m61lodk8pf5l6c14&st=24z930gc&dl=0).
 
 To run 3-shot meta-training on ICEWS14-OOG:
 
